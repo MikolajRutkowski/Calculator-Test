@@ -16,18 +16,27 @@ namespace Test_kalkulatora
 
     public class Tests
     {
-        public string LOTO(int max)
+        public string LOTO(int max, int x = 2)
         {
             string pattern = "";
             var rand = new Random();
-            double one = rand.Next(max);
-            double two = rand.Next(max+1);
-            double three = rand.Next(max+2);
-            double four = rand.Next(max+3);
-            pattern = one.ToString() + "x^4 + " + two.ToString() + "x^3 + " + three.ToString() + "x^2 + " + one.ToString() + "x +" + max.ToString();
+            for (int i = x; i > 0 ; i--)
+            {
+                pattern += rand.Next(max).ToString() + "x^" + i.ToString() + " + ";
+
+            }
+            pattern += rand.Next(max).ToString();
             return pattern;
         }
 
+        void RandomClik(IWebElement target)
+        {
+            var rand = new Random();
+            if(rand.Next(1,2) == 1)
+            {
+                target.Click();
+            }
+        }
 
 
         IWebDriver driver1;
@@ -58,15 +67,43 @@ namespace Test_kalkulatora
                 Input.Clear();
                 Input.SendKeys(data);
                 Click.Click();
-                Thread.Sleep(1000);
+               // Thread.Sleep(1000);
             }
 
-            Draw("2x^4 - 5x + 10");
-            for (int i = 0; i <100; i++)
+          
+            for (int i = 0; i <10; i++)
             {
                 Draw(LOTO(i+2));
             }
-            
+
+            Draw(LOTO(5, 3));
+
+          
+            IWebElement Zero = driver1.FindElement(By.Id("miejsca_zerowe"));
+            Zero.Click();
+            IWebElement OY = driver1.FindElement(By.Id("punkt_przeciecia_y"));
+            OY.Click();
+            IWebElement Ekstreama = driver1.FindElement(By.Id("ekstrema"));
+            Ekstreama.Click();
+            IWebElement Asymptoty = driver1.FindElement(By.Id("asymptoty"));
+            Asymptoty.Click();
+            IWebElement Pochodne = driver1.FindElement(By.Id("pochodne"));
+            Pochodne.Click();
+
+            for (int  i = 0;  i < 10 ;  i++)
+            {
+                Draw(LOTO(i + 5, 5));
+                RandomClik(Zero);
+                RandomClik(OY);
+                RandomClik(Ekstreama);
+                RandomClik(Asymptoty);
+                RandomClik(Pochodne);
+            }
+
+
+
+
+
         }
         [TearDown]
         public void QuitDriver()
